@@ -7,6 +7,7 @@ import {
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import theme from "./theme";
 import "./globals.css";
+import { AuthProvider } from "./contexts/AuthContext";
 
 export const metadata: Metadata = {
   title: "Time Tracker",
@@ -24,11 +25,13 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body className="antialiased">
-        <GoogleOAuthProvider
-          clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}
-        >
-          <MantineProvider theme={theme}>{children}</MantineProvider>
-        </GoogleOAuthProvider>
+        <AuthProvider>
+          <GoogleOAuthProvider
+            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}
+          >
+            <MantineProvider theme={theme}>{children}</MantineProvider>
+          </GoogleOAuthProvider>
+        </AuthProvider>
       </body>
     </html>
   );

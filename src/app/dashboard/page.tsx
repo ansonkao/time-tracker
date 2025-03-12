@@ -21,6 +21,8 @@ import {
   startOfDay,
   endOfDay,
 } from "date-fns";
+import { useAuth } from "../contexts/AuthContext";
+import { redirect } from "next/navigation";
 
 // Define a type for calendar information
 interface Calendar {
@@ -31,6 +33,7 @@ interface Calendar {
   selected: boolean;
   primary: boolean;
   accessRole: string;
+  timeZone: string;
 }
 
 export default function Dashboard() {
@@ -44,6 +47,7 @@ export default function Dashboard() {
     // Get the start of the current week (Monday)
     return startOfWeek(new Date(), { weekStartsOn: 1 });
   });
+  const { isAuthenticated, loading: authLoading } = useAuth();
 
   useEffect(() => {
     console.log("currentWeekStart", currentWeekStart);
@@ -56,12 +60,12 @@ export default function Dashboard() {
     setLoading(true);
     setDebugInfo(null);
     try {
-      // Format dates for API request in UTC
-      const timeMin = format(startOfDay(weekStart), "yyyy-MM-dd'T'00:00:00'Z'");
+      // Format dates for API request without forcing UTC
+      const timeMin = startOfDay(weekStart).toISOString();
 
       // Calculate the end of the week (Sunday)
-      const weekEnd = addDays(weekStart, 6);
-      const timeMax = format(endOfDay(weekEnd), "yyyy-MM-dd'T'23:59:59'Z'");
+      const weekEnd = addDays(weekStart, 7);
+      const timeMax = weekEnd.toISOString();
 
       setDebugInfo(`Fetching events from ${timeMin} to ${timeMax}`);
 
@@ -109,6 +113,14 @@ export default function Dashboard() {
   const handleWeekChange = (newWeekStart: Date) => {
     setCurrentWeekStart(newWeekStart);
   };
+
+  if (authLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isAuthenticated) {
+    redirect("/");
+  }
 
   return (
     <AppShell header={{ height: 60 }} padding="md">

@@ -47,6 +47,7 @@ export async function GET(request: NextRequest) {
       selected: calendar.selected,
       primary: calendar.primary || false,
       accessRole: calendar.accessRole,
+      timeZone: calendar.timeZone,
     }));
 
     // Collect all events from all calendars
@@ -58,11 +59,20 @@ export async function GET(request: NextRequest) {
       pageToken = null,
     ) => {
       // Build the API URL with the provided parameters
-      let apiUrl = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?maxResults=250&orderBy=startTime&singleEvents=true&timeMin=${timeMin}`;
+      let apiUrl = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?maxResults=250&orderBy=startTime&singleEvents=true`;
 
-      // Add timeMax if provided
+      // Add timeMin with the calendar's timezone
+      const calendar = calendars.find((cal: any) => cal.id === calendarId);
+      const calendarTimezone = calendar?.timeZone || "UTC";
+
+      // Convert timeMin to the calendar's timezone
+      const timeMinDate = new Date(timeMin);
+      apiUrl += `&timeMin=${timeMinDate.toISOString()}`;
+
+      // Add timeMax if provided, also in the calendar's timezone
       if (timeMax) {
-        apiUrl += `&timeMax=${timeMax}`;
+        const timeMaxDate = new Date(timeMax);
+        apiUrl += `&timeMax=${timeMaxDate.toISOString()}`;
       }
 
       // Add page token if provided
@@ -70,8 +80,8 @@ export async function GET(request: NextRequest) {
         apiUrl += `&pageToken=${pageToken}`;
       }
 
-      // Add timeZone parameter to ensure consistent time handling
-      apiUrl += `&timeZone=UTC`;
+      // Use the calendar's timezone instead of forcing UTC
+      apiUrl += `&timeZone=${encodeURIComponent(calendarTimezone)}`;
 
       // Fetch calendar events from Google Calendar API
       const response = await fetch(apiUrl, {
