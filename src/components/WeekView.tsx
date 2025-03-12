@@ -19,7 +19,7 @@ import {
   IconEdit,
   IconFilter,
 } from "@tabler/icons-react";
-import { format, addDays, addWeeks, subWeeks, parseISO } from "date-fns";
+import { format, addDays, addWeeks, subWeeks } from "date-fns";
 import { useCategories } from "./useCategories";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { formatInTimeZone } from "date-fns-tz";
@@ -102,11 +102,9 @@ export default function WeekView({
 
   // Update visible calendars when the calendars prop changes
   useEffect(() => {
-    const updatedVisibleCalendars: Record<string, boolean> = {
+    const updatedVisibleCalendars: { [key: string]: boolean } = {
       ...visibleCalendars,
     };
-
-    // Add any new calendars
     calendars.forEach((calendar) => {
       if (updatedVisibleCalendars[calendar.id] === undefined) {
         updatedVisibleCalendars[calendar.id] = true;

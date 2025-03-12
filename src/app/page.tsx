@@ -1,6 +1,5 @@
 import Login from "@/components/Login";
 import { AppShell, AppShellMain, Box, Text, Title } from "@mantine/core";
-import Image from "next/image";
 
 export default function Home() {
   return (

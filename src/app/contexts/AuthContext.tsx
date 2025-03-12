@@ -28,6 +28,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsAuthenticated(data.authenticated);
         setUser(data.user || null);
       } catch (error) {
+        console.error("Error checking authentication:", error);
         setIsAuthenticated(false);
         setUser(null);
       } finally {
