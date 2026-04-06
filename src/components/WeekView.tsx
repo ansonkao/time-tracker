@@ -408,36 +408,6 @@ export default function WeekView({
         <Grid.Col span={4}>
           <Stack>
             <Paper shadow="xs" p="md" withBorder>
-              <Title order={5} mb="sm">
-                Calendars
-              </Title>
-              <Stack gap="xs">
-                {calendars.length === 0 ? (
-                  <Text size="sm" c="dimmed" ta="center">
-                    No calendars found
-                  </Text>
-                ) : (
-                  calendars.map((calendar) => (
-                    <Group key={calendar.id} gap="xs" wrap="nowrap">
-                      <Checkbox
-                        checked={visibleCalendars[calendar.id] || false}
-                        onChange={() => toggleCalendarVisibility(calendar.id)}
-                        styles={{
-                          input: {
-                            backgroundColor: calendar.backgroundColor,
-                            borderColor: calendar.backgroundColor,
-                          },
-                        }}
-                      />
-                      <Text size="sm" lineClamp={1}>
-                        {calendar.summary}
-                      </Text>
-                    </Group>
-                  ))
-                )}
-              </Stack>
-            </Paper>
-            <Paper shadow="xs" p="md" withBorder>
               <Stack gap="lg">
                 <Title order={5}>Categorize Events</Title>
                 <Stack gap="xs">
@@ -692,6 +662,36 @@ export default function WeekView({
                     </Grid.Col>
                   </Grid>
                 </Stack>
+              </Stack>
+            </Paper>
+            <Paper shadow="xs" p="md" withBorder>
+              <Title order={5} mb="sm">
+                Calendars
+              </Title>
+              <Stack gap="xs">
+                {calendars.length === 0 ? (
+                  <Text size="sm" c="dimmed" ta="center">
+                    No calendars found
+                  </Text>
+                ) : (
+                  calendars.map((calendar) => (
+                    <Group key={calendar.id} gap="xs" wrap="nowrap">
+                      <Checkbox
+                        checked={visibleCalendars[calendar.id] || false}
+                        onChange={() => toggleCalendarVisibility(calendar.id)}
+                        styles={{
+                          input: {
+                            backgroundColor: calendar.backgroundColor,
+                            borderColor: calendar.backgroundColor,
+                          },
+                        }}
+                      />
+                      <Text size="sm" lineClamp={1}>
+                        {calendar.summary}
+                      </Text>
+                    </Group>
+                  ))
+                )}
               </Stack>
             </Paper>
           </Stack>
